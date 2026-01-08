@@ -73,31 +73,4 @@ jobs:
           name: pdf-tools-windows-x64
           path: dist/*
           retention-days: 30
-      
-      - name: Create Release (on tag)
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v1
-        with:
-          files: dist/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Create or Update Latest Release
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: latest
-          name: Latest Build
-          body: |
-            ## 📦 Latest Stable Build
-            **Last Updated:** ${{ steps.release_info.outputs.date }}
-            **Commit:** ${{ github.sha }}
-            
-            ### 📝 Recent Changes
-            ${{ steps.release_info.outputs.commits }}
-          files: |
-            pdf-tools-windows-x64.zip
-            pdf-tools-windows-x64.zip.sha256
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
