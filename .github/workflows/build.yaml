@@ -67,10 +67,29 @@ jobs:
           
           ls -lh dist/
       
-      - name: Upload artifacts
+      - name: Package release
+        run: |
+          cd dist
+          zip -r ../pdf-tools-windows-x64.zip *
+          
+      - name:  Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: pdf-tools-windows-x64
           path: dist/*
           retention-days: 30
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files:  pdf-tools-windows-x64.zip
+          tag_name: build-${{ github.sha }}
+          name: Build ${{ github.sha }}
+          body:  |
+            Automated build from commit ${{ github.sha }}
+            Branch: ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
